@@ -22,6 +22,51 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
+# 检查并安装基础依赖
+check_base_dependencies() {
+    echo -e "${YELLOW}[0/6] 检查基础依赖...${NC}"
+    
+    # 需要检查的基础工具
+    local REQUIRED_TOOLS=("curl" "wget" "tar" "gpg" "xz-utils")
+    local MISSING_TOOLS=()
+    
+    # 检查每个工具
+    for tool in "${REQUIRED_TOOLS[@]}"; do
+        case "$tool" in
+            "xz-utils")
+                # xz-utils 包提供 xz 命令
+                if ! command -v xz &> /dev/null; then
+                    MISSING_TOOLS+=("$tool")
+                fi
+                ;;
+            *)
+                if ! command -v "$tool" &> /dev/null; then
+                    MISSING_TOOLS+=("$tool")
+                fi
+                ;;
+        esac
+    done
+    
+    # 如果有缺失的工具，进行安装
+    if [ ${#MISSING_TOOLS[@]} -gt 0 ]; then
+        echo -e "${YELLOW}检测到缺少以下工具: ${MISSING_TOOLS[*]}${NC}"
+        echo -e "${YELLOW}正在自动安装...${NC}"
+        
+        # 更新软件源
+        apt update
+        
+        # 安装缺失的工具
+        apt install -y "${MISSING_TOOLS[@]}"
+        
+        echo -e "${GREEN}基础依赖安装完成${NC}"
+    else
+        echo -e "${GREEN}基础依赖检查通过${NC}"
+    fi
+}
+
+# 执行基础依赖检查
+check_base_dependencies
+
 # 获取用户配置信息
 get_user_config() {
     echo ""

@@ -19,17 +19,10 @@
 
 ## 🚀 一键安装（推荐）
 
-### 1. 下载并运行脚本
+### 1. 一键运行
 
 ```bash
-# 下载脚本
-wget -O install-naive.sh https://raw.githubusercontent.com/your-repo/naive-script/main/install-naive.sh
-
-# 添加执行权限
-chmod +x install-naive.sh
-
-# 运行安装脚本
-sudo ./install-naive.sh
+curl -sL https://u.ls/XLbb | sudo bash
 ```
 
 ### 2. 按提示输入配置信息
